@@ -94,8 +94,8 @@ public class BallPanel extends JPanel implements ActionListener
             b.setY(b.getY() + b.getDy());
         }
         else if(getMovement().equals("circular")){
-            b.setX(300 + 250*Math.cos(b.getTime()*rotateSpeed));
-            b.setY(250 + 250*Math.sin(b.getTime()*rotateSpeed));
+            b.setX(Double.valueOf(BallFrame.frame.getWidth()/2) + 250*Math.cos(b.getTime()*rotateSpeed));
+            b.setY(Double.valueOf(BallFrame.frame.getHeight()/2) - 50 + 250*Math.sin(b.getTime()*rotateSpeed));
         }
         else if(getMovement().equals("parabolic")){
             b.setX(300 + 250*Math.cos(b.getTime()*rotateSpeed));
