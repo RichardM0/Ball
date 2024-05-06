@@ -12,16 +12,19 @@ public class Ball
     private double x, y, dx, dy;
     private int radius;
     private Color color;
+    private long startTime;
 
     /**
      * Constructor for objects of class Ball
      */
-    public Ball(int x, int y, int radius){
+    public Ball(int x, int y, int radius, long startTime){
         this.x = x;
         this.y = y;
         dx = 3;
         dy = 1;
         color = Color.red;
+        startTime = System.currentTimeMillis();
+        this.startTime = startTime;
         this.radius = radius;
     }
     public void setX(double a){
@@ -39,11 +42,14 @@ public class Ball
     public double getY(){
         return y;
     }
-     public double getDx(){
+    public double getDx(){
         return dx;
     }
     public double getDy(){
         return dy;
+    }
+    public long getTime(){
+        return System.currentTimeMillis() - startTime;
     }
     public void setDx(double a){
         dx = a;
