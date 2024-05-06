@@ -1,0 +1,121 @@
+
+import java.awt.event.*;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JButton;
+import javax.swing.ButtonGroup;
+
+public class BallFrame extends JFrame implements ActionListener, ItemListener
+{
+   // execute application
+   public static JFrame frame;
+   private static JMenuBar menuBar;
+   private static JMenu speedMenu, colorMenu;
+   private static JRadioButtonMenuItem low, medium, high;
+   private static JPanel subPanel; 
+   private static JButton start, stop, addBalls;
+   private static ButtonGroup speedGroup, colorGroup;
+   private static BallPanel bp;
+   public BallFrame()
+   {
+        // create frame for balls
+        frame = new JFrame( "Bouncing Ball" );
+        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        
+        // create a new ball panel at (x,y) coordinate (25,50)
+        bp = new BallPanel(25, 50); 
+        
+        // create the menu bar
+        JMenuBar menuBar = new JMenuBar();
+        // add a dropdown for speed
+        JMenu speedMenu = new JMenu("Speed");  
+        JMenu colorMenu = new JMenu("Color");
+        // create a group for the speed buttons
+        speedGroup = new ButtonGroup();
+        colorGroup = new ButtonGroup();
+        // separate the menu selections
+        speedMenu.addSeparator();
+        colorMenu.addSeparator();
+        
+        // create the selections under speed menu
+        low = new JRadioButtonMenuItem("Low Speed");
+        medium = new JRadioButtonMenuItem("Medium Speed");
+        high = new JRadioButtonMenuItem("High Speed");
+        
+        // add listeners to check if it is selected
+        low.addItemListener(this);
+        medium.addItemListener(this);
+        high.addItemListener(this);
+        
+        // add these radio buttons to the group
+        speedGroup.add(low);
+        speedGroup.add(medium);
+        speedGroup.add(high);
+        
+        // add these radio buttons to the menu
+        speedMenu.add(low);
+        speedMenu.add(medium);
+        speedMenu.add(high);
+        menuBar.add(speedMenu);
+        
+        // create subpanel for buttons
+        subPanel = new JPanel();
+        subPanel.setBackground(Color.gray);
+        
+        // start, stop, and add balls button
+        start = new JButton("Start");
+        stop = new JButton("Stop");
+        addBalls = new JButton("Add Balls");
+        
+        // add event listeners to check if the button is pressed
+        stop.addActionListener(this);
+        start.addActionListener(this);
+        addBalls.addActionListener(this);
+        
+        // add buttons to the subpanel
+        subPanel.add(start);
+        subPanel.add(stop);
+        subPanel.add(addBalls);
+        
+        // set the menubar visible
+        frame.setJMenuBar(menuBar);
+        // add button panel to the bottom of the frame
+        frame.getContentPane().add(subPanel, BorderLayout.SOUTH);
+        // add ball panel and set frame boundaries
+        frame.add( bp );
+        frame.setSize( 600, 600 ); // set frame size
+        frame.setVisible( true ); // display frame
+   }
+   public static void main( String args[] )
+   {
+        BallFrame run = new BallFrame();
+   } // end main
+   public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == stop){
+            bp.setStopped();
+        }
+        else if (e.getSource() == start){
+            bp.setStart();
+        }
+        else if(e.getSource() == addBalls){
+            bp.addBall();
+        }
+   }
+   public void itemStateChanged(ItemEvent e){
+        if (e.getSource() == low){
+            bp.setSpeed(3.0,1.0);
+        }
+        else if (e.getSource() == medium){
+            bp.setSpeed(6.0,2.0);
+        }
+        else if (e.getSource() == high){
+            bp.setSpeed(9.0,3.0);
+        }
+   }
+}
