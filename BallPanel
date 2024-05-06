@@ -1,0 +1,87 @@
+import java.awt.event.*;
+import java.awt.Graphics;
+import java.awt.Color;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+import java.util.ArrayList;
+
+public class BallPanel extends JPanel implements ActionListener
+{
+   private int delay = 10;
+   protected Timer timer;
+   private ArrayList<Ball> balls = new ArrayList<Ball>();
+   long startTime;
+   
+   private int radius = 15; // ball radius
+   // y position
+   
+   private double angle = 45*Math.PI/180;
+   private boolean isStopped = false;
+
+   public BallPanel(int x, int y)
+   {
+      balls.add(new Ball(25, 50, 15));
+      startTime = System.currentTimeMillis();
+      timer = new Timer(delay, this);
+      timer.start();      // start the timer
+   }
+   public void actionPerformed(ActionEvent e)
+   // will run when the timer fires
+   {
+       repaint();
+   }
+   // draw rectangles and arcs
+   public void paintComponent( Graphics g )
+   {
+       super.paintComponent( g ); // call superclass's paintComponent 
+       
+       long t = System.currentTimeMillis() - startTime;
+       
+       // check for boundaries
+       for(Ball b : balls){
+           g.setColor(b.getColor());
+           if(b.getX()>BallFrame.frame.getWidth() - radius || b.getX()<0 + radius){
+               b.setDx(-b.getDx());
+           }
+           if(b.getY()>BallFrame.frame.getHeight() - radius || b.getY()<0 + radius){
+               b.setDy(-b.getDy());
+           }
+           // adjust ball position
+           if(!isStopped){
+               b.setX(b.getX() + b.getDx()); //dx*Math.cos(angle)*t;
+               b.setY(b.getY() + b.getDy());//dy*Math.sin(angle)*t - 0.5*9.8*(t*t);
+           }
+           g.fillOval((int)(b.getX() - radius), (int)(b.getY() - radius), radius*2, radius*2);
+       }
+   }
+   public void setSpeed(double x, double y){
+       for(Ball b : balls){
+           if(b.getDx()<0){
+               b.setDx(-x);
+           }
+           else if(b.getDx()>0){
+               b.setDx(x);
+           }
+           if(b.getDy()<0){
+               b.setDy(-y);
+           }
+           else if(b.getDy()>0){
+               b.setDy(y);
+           }     
+       }
+   }
+   public void setStopped(){
+       isStopped = true;
+   }
+   public void setStart(){
+       isStopped = false;
+   }
+   public void addBall(){
+       balls.add(new Ball(25, 50, 15));
+   }
+   public void setColor(Color c){
+      for(Ball b : balls){
+          b.setColor(c);
+      }
+   }
+}
