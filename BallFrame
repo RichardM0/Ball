@@ -1,6 +1,5 @@
 
 import java.awt.event.*;
-import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
@@ -16,11 +15,11 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
    // execute application
    public static JFrame frame;
    private static JMenuBar menuBar;
-   private static JMenu speedMenu, colorMenu;
-   private static JRadioButtonMenuItem low, medium, high;
+   private static JMenu speedMenu, colorMenu, pathMenu;
+   private static JRadioButtonMenuItem low, medium, high, blue, red, yellow, linear, circular, parabolic;
    private static JPanel subPanel; 
    private static JButton start, stop, addBalls;
-   private static ButtonGroup speedGroup, colorGroup;
+   private static ButtonGroup speedGroup, colorGroup, pathGroup;
    private static BallPanel bp;
    public BallFrame()
    {
@@ -32,37 +31,72 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         bp = new BallPanel(25, 50); 
         
         // create the menu bar
-        JMenuBar menuBar = new JMenuBar();
-        // add a dropdown for speed
-        JMenu speedMenu = new JMenu("Speed");  
-        JMenu colorMenu = new JMenu("Color");
-        // create a group for the speed buttons
+        menuBar = new JMenuBar();
+        // add a dropdown for the menus
+        speedMenu = new JMenu("Speed");  
+        colorMenu = new JMenu("Color");
+        pathMenu = new JMenu("Path");
+        // create a group for the menu buttons
         speedGroup = new ButtonGroup();
         colorGroup = new ButtonGroup();
+        pathGroup = new ButtonGroup();
         // separate the menu selections
         speedMenu.addSeparator();
         colorMenu.addSeparator();
+        pathMenu.addSeparator();
         
         // create the selections under speed menu
         low = new JRadioButtonMenuItem("Low Speed");
         medium = new JRadioButtonMenuItem("Medium Speed");
         high = new JRadioButtonMenuItem("High Speed");
+
+        // create the selections under color menu
+        blue = new JRadioButtonMenuItem("blue");
+        red = new JRadioButtonMenuItem("red");
+        yellow = new JRadioButtonMenuItem("yellow");
+
+        // create the selections under color menu
+        linear = new JRadioButtonMenuItem("linear");
+        circular = new JRadioButtonMenuItem("circular");
+        parabolic = new JRadioButtonMenuItem("parabolic");
         
         // add listeners to check if it is selected
         low.addItemListener(this);
         medium.addItemListener(this);
         high.addItemListener(this);
+        blue.addItemListener(this);
+        red.addItemListener(this);
+        yellow.addItemListener(this);
+        linear.addItemListener(this);
+        circular.addItemListener(this);
+        parabolic.addItemListener(this);
         
-        // add these radio buttons to the group
+        // add these radio buttons to their respective group
         speedGroup.add(low);
         speedGroup.add(medium);
         speedGroup.add(high);
+        colorGroup.add(blue);
+        colorGroup.add(red);
+        colorGroup.add(yellow);
+        pathGroup.add(linear);
+        pathGroup.add(circular);
+        pathGroup.add(parabolic);
         
         // add these radio buttons to the menu
         speedMenu.add(low);
         speedMenu.add(medium);
         speedMenu.add(high);
+        colorMenu.add(blue);
+        colorMenu.add(red);
+        colorMenu.add(yellow);
+        pathMenu.add(linear);
+        pathMenu.add(circular);
+        pathMenu.add(parabolic);
+
+        // add each menu to the menu bar
         menuBar.add(speedMenu);
+        menuBar.add(colorMenu);
+        menuBar.add(pathMenu);
         
         // create subpanel for buttons
         subPanel = new JPanel();
@@ -109,13 +143,31 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
    }
    public void itemStateChanged(ItemEvent e){
         if (e.getSource() == low){
-            bp.setSpeed(3.0,1.0);
+            bp.setSpeed(3.0,1.0, 2048);
         }
         else if (e.getSource() == medium){
-            bp.setSpeed(6.0,2.0);
+            bp.setSpeed(6.0,2.0, 1024);
         }
         else if (e.getSource() == high){
-            bp.setSpeed(9.0,3.0);
+            bp.setSpeed(9.0,3.0, 512);
+        }
+        else if (e.getSource() == blue){
+            bp.setColor(Color.blue);
+        }
+        else if (e.getSource() == red){
+            bp.setColor(Color.red);
+        }
+        else if (e.getSource() == yellow){
+            bp.setColor(Color.yellow);
+        }
+        else if (e.getSource() == linear){
+            bp.setMovement("linear");
+        }
+        else if (e.getSource() == circular){
+            bp.setMovement("circular");
+        }
+        else if (e.getSource() == parabolic){
+            bp.setMovement("parabolic");
         }
    }
 }
