@@ -16,7 +16,7 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
    public static JFrame frame;
    private static JMenuBar menuBar;
    private static JMenu speedMenu, colorMenu, pathMenu;
-   private static JRadioButtonMenuItem low, medium, high, blue, red, yellow, linear, circular, parabolic;
+   private static JRadioButtonMenuItem low, medium, high, blue, red, yellow, linear, circular, parabolic, sine;
    private static JPanel subPanel; 
    private static JButton start, stop, addBalls;
    private static ButtonGroup speedGroup, colorGroup, pathGroup;
@@ -59,6 +59,7 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         linear = new JRadioButtonMenuItem("linear");
         circular = new JRadioButtonMenuItem("circular");
         parabolic = new JRadioButtonMenuItem("parabolic");
+        sine = new JRadioButtonMenuItem("sinusoidal");
         
         // add listeners to check if it is selected
         low.addItemListener(this);
@@ -70,6 +71,7 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         linear.addItemListener(this);
         circular.addItemListener(this);
         parabolic.addItemListener(this);
+        sine.addItemListener(this);
         
         // add these radio buttons to their respective group
         speedGroup.add(low);
@@ -81,6 +83,7 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         pathGroup.add(linear);
         pathGroup.add(circular);
         pathGroup.add(parabolic);
+        pathGroup.add(sine);
         
         // add these radio buttons to the menu
         speedMenu.add(low);
@@ -92,6 +95,7 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         pathMenu.add(linear);
         pathMenu.add(circular);
         pathMenu.add(parabolic);
+        pathMenu.add(sine);
 
         // add each menu to the menu bar
         menuBar.add(speedMenu);
@@ -143,13 +147,13 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
    }
    public void itemStateChanged(ItemEvent e){
         if (e.getSource() == low){
-            bp.setSpeed(3.0,1.0, 2048);
+            bp.setSpeed(3.0, 2048);
         }
         else if (e.getSource() == medium){
-            bp.setSpeed(6.0,2.0, 1024);
+            bp.setSpeed(6.0, 1024);
         }
         else if (e.getSource() == high){
-            bp.setSpeed(9.0,3.0, 512);
+            bp.setSpeed(9.0, 512);
         }
         else if (e.getSource() == blue){
             bp.setColor(Color.blue);
@@ -168,6 +172,9 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         }
         else if (e.getSource() == parabolic){
             bp.setMovement("parabolic");
+        }
+        else if (e.getSource() == sine){
+            bp.setMovement("sine");
         }
    }
 }
