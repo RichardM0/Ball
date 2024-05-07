@@ -45,17 +45,11 @@ public class Ball
     public double getDx(){
         return dx;
     }
-    public double getDy(){
-        return dy;
-    }
     public long getTime(){
         return System.currentTimeMillis() - startTime;
     }
     public void setDx(double a){
         dx = a;
-    }
-    public void setDy(double a){
-        dy = a;
     }
     public Color getColor(){
         return color;
