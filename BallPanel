@@ -35,20 +35,25 @@ public class BallPanel extends JPanel implements ActionListener
    public void paintComponent( Graphics g )
    {
        super.paintComponent( g ); // call superclass's paintComponent 
-       // check for boundaries
+       // check for boundaries and reverse delta x/delta y
        for(Ball b : balls){
            g.setColor(b.getColor());
            if(b.getX()>BallFrame.frame.getWidth() - radius || b.getX()<0 + radius){
                b.setDx(-b.getDx());
            }
+           if(b.getY()>BallFrame.frame.getHeight() - radius || b.getY()<0 + radius){
+               b.setDy(-b.getDy());
+           }
            // adjust ball position
            if(!isStopped){
                 move(b);
            }
+           // paint to screen
            g.fillOval((int)(b.getX() - radius), (int)(b.getY() - radius), radius*2, radius*2);
        }
    }
-   public void setSpeed(double x, int z){
+   public void setSpeed(double x, double y, int z){
+       // check for the sign of delta x + delta y, adjust speed accordingly
        for(Ball b : balls){
            if(b.getDx()<0){
                b.setDx(-x);
@@ -56,29 +61,45 @@ public class BallPanel extends JPanel implements ActionListener
            else if(b.getDx()>0){
                b.setDx(x);
            }
+           if(b.getDy()<0){
+               b.setDy(-y);
+           }
+           else if(b.getDy()>0){
+               b.setDy(y);
+           }
+           // circular motion speed
            rotateSpeed = Math.PI/z;  
        }
    }
    public void setStopped(){
+       // stop all balls
        isStopped = true;
    }
    public void setStart(){
+       // start the motion of all balls
        isStopped = false;
    }
    public void addBall(){
-       Random r = new Random();
-       int y = 30 + r.nextInt(450);
-       balls.add(new Ball(25, y, 15, System.currentTimeMillis()));
+        // add ball to random position on screen
+        Random r = new Random();
+        int width = BallFrame.frame.getWidth();
+        int height = BallFrame.frame.getHeight();
+        int x = 30 + r.nextInt(30 + 3*width/4);
+        int y = 30 + r.nextInt(30 + 3*height/4);
+        balls.add(new Ball(x, y, 15, System.currentTimeMillis()));
    }
    public void setColor(Color c){
-      for(Ball b : balls){
-          b.setColor(c);
-      }
+        // set color of all balls to some color
+        for(Ball b : balls){
+            b.setColor(c);
+        }
    }
    public void setMovement(String path){
+        // set movement to some path
         movement = path;
    }
    public String getMovement(){
+        // get what movement is active
         return movement;
    }
    public void move(Ball b){    
@@ -86,8 +107,7 @@ public class BallPanel extends JPanel implements ActionListener
             b.setX(b.getX() + b.getDx());
         }
         else if(getMovement().equals("circular")){
-            b.setX(Double.valueOf(BallFrame.frame.getWidth()/2) + 240*Math.cos(b.getTime()*rotateSpeed));
-            b.setY(Double.valueOf(BallFrame.frame.getHeight()/2) - 50 + 240*Math.sin(b.getTime()*rotateSpeed));
+            circularMotion(b);
         }
         else if(getMovement().equals("parabolic")){
             parabolicMotion(b);
@@ -99,18 +119,25 @@ public class BallPanel extends JPanel implements ActionListener
             ellipsoidMotion(b);
         }
    }
+   public void circularMotion(Ball b){
+        b.setX(Double.valueOf(BallFrame.frame.getWidth()/2) + 240*Math.cos(b.getTime()*rotateSpeed));
+        b.setY(Double.valueOf(BallFrame.frame.getHeight()/2) - 50 + 240*Math.sin(b.getTime()*rotateSpeed));
+    }
    public void parabolicMotion(Ball b){
-       int width = BallFrame.frame.getWidth();
-       b.setX(b.getX() + b.getDx());
-       b.setY(width/2 + (width/2)*Math.sin(b.getTime()*Math.PI/(width)));
+        int width = BallFrame.frame.getWidth();
+        if(b.getY() > BallFrame.frame.getHeight()){
+            b.setDx(-b.getDx());
+        }
+        b.setX(b.getX() + b.getDx());
+        b.setY((5/Double.valueOf(width))*(Math.pow(b.getX() - width/2, 2)));
    }
    public void sineMotion(Ball b){
-       int height = BallFrame.frame.getHeight();
-       b.setX(b.getX() + b.getDx());
-       b.setY((height/2 + 2*radius) + height/3 * Math.sin(b.getX()/64));
+        int height = BallFrame.frame.getHeight();
+        b.setX(b.getX() + b.getDx()/3);
+        b.setY(height/4 * Math.sin(b.getX()*(4*Math.PI/height)) + (height/2));
    }
    public void ellipsoidMotion(Ball b){
-       b.setX(Double.valueOf(BallFrame.frame.getWidth()/2) + 240*Math.cos(b.getTime()*rotateSpeed));
-       b.setY(Double.valueOf(BallFrame.frame.getHeight()/2) - 50 + 120*Math.sin(b.getTime()*rotateSpeed));
+        b.setX(Double.valueOf(BallFrame.frame.getWidth()/2) + 240*Math.cos(b.getTime()*rotateSpeed));
+        b.setY(Double.valueOf(BallFrame.frame.getHeight()/2) - 50 + 120*Math.sin(b.getTime()*rotateSpeed));
    }
 }
