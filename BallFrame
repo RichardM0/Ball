@@ -1,122 +1,188 @@
+
 import java.awt.event.*;
-import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.BorderLayout;
 import javax.swing.JPanel;
-import javax.swing.Timer;
-import java.util.ArrayList;
-import java.util.Random;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JButton;
+import javax.swing.ButtonGroup;
 
-public class BallPanel extends JPanel implements ActionListener
+public class BallFrame extends JFrame implements ActionListener, ItemListener
 {
-   private int delay = 10;
-   protected Timer timer;
-   private ArrayList<Ball> balls = new ArrayList<Ball>();
-   
-   private int radius = 15; // ball radius
-   private int Vi = 50;
-   private double angle = Math.PI/16;
-   private double rotateSpeed = Math.PI / 2048;
-   private boolean isStopped = false;
-   private boolean movingRight;
-   private String movement = "linear";
+   // execute application
+   public static JFrame frame;
+   private static BallPanel bp;
+   private static JMenuBar menuBar;
+   private static JMenu speedMenu, colorMenu, pathMenu;
+   private static JRadioButtonMenuItem low, medium, high, blue, red, yellow, linear, circular, parabolic, sine, ellipse;
+   private static JPanel subPanel; 
+   private static JButton start, stop, addBalls;
+   private static ButtonGroup speedGroup, colorGroup, pathGroup;
+   public BallFrame()
+   {
+        // create frame for balls
+        frame = new JFrame( "Bouncing Ball" );
+        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        
+        // create a new ball panel at (x,y) coordinate (25,50)
+        bp = new BallPanel(25, 50); 
+        
+        // create the menu bar
+        menuBar = new JMenuBar();
+        // add a dropdown for the menus
+        speedMenu = new JMenu("Speed");  
+        colorMenu = new JMenu("Color");
+        pathMenu = new JMenu("Path");
+        // create a group for the menu buttons
+        speedGroup = new ButtonGroup();
+        colorGroup = new ButtonGroup();
+        pathGroup = new ButtonGroup();
+        // separate the menu selections
+        speedMenu.addSeparator();
+        colorMenu.addSeparator();
+        pathMenu.addSeparator();
+        
+        // create the selections under speed menu
+        low = new JRadioButtonMenuItem("Low Speed");
+        medium = new JRadioButtonMenuItem("Medium Speed");
+        high = new JRadioButtonMenuItem("High Speed");
 
-   public BallPanel(int x, int y)
+        // create the selections under color menu
+        blue = new JRadioButtonMenuItem("blue");
+        red = new JRadioButtonMenuItem("red");
+        yellow = new JRadioButtonMenuItem("yellow");
+
+        // create the selections under color menu
+        linear = new JRadioButtonMenuItem("linear");
+        circular = new JRadioButtonMenuItem("circular");
+        parabolic = new JRadioButtonMenuItem("parabolic");
+        sine = new JRadioButtonMenuItem("sinusoidal");
+        ellipse = new JRadioButtonMenuItem("ellipsoidal");
+        
+        // add listeners to check if it is selected
+        low.addItemListener(this);
+        medium.addItemListener(this);
+        high.addItemListener(this);
+        blue.addItemListener(this);
+        red.addItemListener(this);
+        yellow.addItemListener(this);
+        linear.addItemListener(this);
+        circular.addItemListener(this);
+        parabolic.addItemListener(this);
+        sine.addItemListener(this);
+        ellipse.addItemListener(this);
+        
+        // add these radio buttons to their respective group
+        speedGroup.add(low);
+        speedGroup.add(medium);
+        speedGroup.add(high);
+        colorGroup.add(blue);
+        colorGroup.add(red);
+        colorGroup.add(yellow);
+        pathGroup.add(linear);
+        pathGroup.add(circular);
+        pathGroup.add(parabolic);
+        pathGroup.add(sine);
+        pathGroup.add(ellipse);
+        
+        // add these radio buttons to the menu
+        speedMenu.add(low);
+        speedMenu.add(medium);
+        speedMenu.add(high);
+        colorMenu.add(blue);
+        colorMenu.add(red);
+        colorMenu.add(yellow);
+        pathMenu.add(linear);
+        pathMenu.add(circular);
+        pathMenu.add(parabolic);
+        pathMenu.add(sine);
+        pathMenu.add(ellipse);
+
+        // add each menu to the menu bar
+        menuBar.add(speedMenu);
+        menuBar.add(colorMenu);
+        menuBar.add(pathMenu);
+        
+        // create subpanel for buttons
+        subPanel = new JPanel();
+        subPanel.setBackground(Color.gray);
+        
+        // start, stop, and add balls button
+        start = new JButton("Start");
+        stop = new JButton("Stop");
+        addBalls = new JButton("Add Balls");
+        
+        // add event listeners to check if the button is pressed
+        stop.addActionListener(this);
+        start.addActionListener(this);
+        addBalls.addActionListener(this);
+        
+        // add buttons to the subpanel
+        subPanel.add(start);
+        subPanel.add(stop);
+        subPanel.add(addBalls);
+        System.out.println(subPanel.getHeight());
+        
+        // set the menubar visible
+        frame.setJMenuBar(menuBar);
+        // add button panel to the bottom of the frame
+        frame.getContentPane().add(subPanel, BorderLayout.SOUTH);
+        // add ball panel and set frame boundaries
+        frame.add( bp );
+        frame.setSize( 600, 600 ); // set frame size
+        frame.setVisible( true ); // display frame
+   }
+   public static void main( String args[] )
    {
-      balls.add(new Ball(25, 25, 15,  System.currentTimeMillis()));
-      timer = new Timer(delay, this);
-      timer.start();      // start the timer
+        BallFrame run = new BallFrame();
    }
-   public void actionPerformed(ActionEvent e)
-   // will run when the timer fires
-   {
-       repaint();
-   }
-   // draw rectrotateSpeeds and arcs
-   public void paintComponent( Graphics g )
-   {
-       super.paintComponent( g ); // call superclass's paintComponent 
-       // check for boundaries
-       for(Ball b : balls){
-           g.setColor(b.getColor());
-           if(b.getX()>BallFrame.frame.getWidth() - radius || b.getX()<0 + radius){
-               b.setDx(-b.getDx());
-           }
-           // adjust ball position
-           if(!isStopped){
-                move(b);
-           }
-           System.out.println(b.getX() + ", " + b.getY());
-           g.fillOval((int)(b.getX() - radius), (int)(b.getY() - radius), radius*2, radius*2);
-       }
-   }
-   public void setSpeed(double x, int z){
-       for(Ball b : balls){
-           if(b.getDx()<0){
-               b.setDx(-x);
-           }
-           else if(b.getDx()>0){
-               b.setDx(x);
-           }
-           rotateSpeed = Math.PI/z;  
-       }
-   }
-   public void setStopped(){
-       isStopped = true;
-   }
-   public void setStart(){
-       isStopped = false;
-   }
-   public void addBall(){
-       Random r = new Random();
-       int y = 30 + r.nextInt(450);
-       balls.add(new Ball(25, y, 15, System.currentTimeMillis()));
-   }
-   public void setColor(Color c){
-      for(Ball b : balls){
-          b.setColor(c);
-      }
-   }
-   public void setMovement(String path){
-        movement = path;
-   }
-   public String getMovement(){
-        return movement;
-   }
-   public void move(Ball b){    
-        if(getMovement().equals("linear")){
-            b.setX(b.getX() + b.getDx());
+   public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == stop){
+            bp.setStopped();
         }
-        else if(getMovement().equals("circular")){
-            b.setX(Double.valueOf(BallFrame.frame.getWidth()/2) + 240*Math.cos(b.getTime()*rotateSpeed));
-            b.setY(Double.valueOf(BallFrame.frame.getHeight()/2) - 50 + 240*Math.sin(b.getTime()*rotateSpeed));
+        else if (e.getSource() == start){
+            bp.setStart();
         }
-        else if(getMovement().equals("parabolic")){
-            parabolicMotion(b);
-        }
-        else if(getMovement().equals("sine")){
-            b.setX(0);
-            b.setY(0);
-            sineMotion(b);
+        else if(e.getSource() == addBalls){
+            bp.addBall();
         }
    }
-   public void parabolicMotion(Ball b){
-       int width = BallFrame.frame.getWidth();
-       b.setX(b.getX() + b.getDx());
-       b.setY(width/2 + (width/2)*Math.sin(b.getTime()*Math.PI/(width)));
-   }
-   public void sineMotion(Ball b){
-       int width = BallFrame.frame.getWidth();
-       int height = BallFrame.frame.getHeight();
-       long curTime = 0;
-       movingRight = b.getX() < width;
-       if(movingRight){
-           b.setX(Vi*b.getTime()/500*Math.cos(angle));
-           b.setY(width/2 - 50 + (width/2 - 50)*Math.sin(b.getTime()*rotateSpeed));
-           curTime = b.getTime();
-       }
-       else{
-           b.setX(Vi*b.getTime()/500*Math.cos(angle)*b.getDx());
-           b.setY(width/2 - (width/2)*Math.sin(b.getTime()*Math.PI/(width)));
-       }
+   public void itemStateChanged(ItemEvent e){
+        if (e.getSource() == low){
+            bp.setSpeed(3.0, 2048);
+        }
+        else if (e.getSource() == medium){
+            bp.setSpeed(6.0, 1024);
+        }
+        else if (e.getSource() == high){
+            bp.setSpeed(9.0, 512);
+        }
+        else if (e.getSource() == blue){
+            bp.setColor(Color.blue);
+        }
+        else if (e.getSource() == red){
+            bp.setColor(Color.red);
+        }
+        else if (e.getSource() == yellow){
+            bp.setColor(Color.yellow);
+        }
+        else if (e.getSource() == linear){
+            bp.setMovement("linear");
+        }
+        else if (e.getSource() == circular){
+            bp.setMovement("circular");
+        }
+        else if (e.getSource() == parabolic){
+            bp.setMovement("parabolic");
+        }
+        else if (e.getSource() == sine){
+            bp.setMovement("sine");
+        }
+        else if (e.getSource() == ellipse){
+            bp.setMovement("ellipse");
+        }
    }
 }
