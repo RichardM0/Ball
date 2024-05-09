@@ -13,11 +13,9 @@ public class BallPanel extends JPanel implements ActionListener
    private ArrayList<Ball> balls = new ArrayList<Ball>();
    
    private int radius = 15; // ball radius
-   private int Vi = 50;
-   private double angle = Math.PI/16;
    private double rotateSpeed = Math.PI / 2048;
    private boolean isStopped = false;
-   private boolean movingRight;
+   private Color color = Color.red;
    private String movement = "linear";
 
    public BallPanel(int x, int y)
@@ -86,13 +84,13 @@ public class BallPanel extends JPanel implements ActionListener
         int height = BallFrame.frame.getHeight();
         int x = 30 + r.nextInt(30 + 3*width/4);
         int y = 30 + r.nextInt(30 + 3*height/4);
-        balls.add(new Ball(x, y, 15, System.currentTimeMillis()));
+        Ball b = new Ball(x, y, 15, System.currentTimeMillis());
+        b.setColor(color);
+        balls.add(b);
    }
    public void setColor(Color c){
         // set color of all balls to some color
-        for(Ball b : balls){
-            b.setColor(c);
-        }
+        color = c;
    }
    public void setMovement(String path){
         // set movement to some path
@@ -103,6 +101,7 @@ public class BallPanel extends JPanel implements ActionListener
         return movement;
    }
    public void move(Ball b){    
+        // check what active path is, move ball respectively
         if(getMovement().equals("linear")){
             b.setX(b.getX() + b.getDx());
         }
@@ -120,23 +119,27 @@ public class BallPanel extends JPanel implements ActionListener
         }
    }
    public void circularMotion(Ball b){
+        // (shift, radius) is the format (unit circle)
         b.setX(Double.valueOf(BallFrame.frame.getWidth()/2) + 240*Math.cos(b.getTime()*rotateSpeed));
         b.setY(Double.valueOf(BallFrame.frame.getHeight()/2) - 50 + 240*Math.sin(b.getTime()*rotateSpeed));
     }
    public void parabolicMotion(Ball b){
+        // apply horizontal stretch to 
         int width = BallFrame.frame.getWidth();
         if(b.getY() > BallFrame.frame.getHeight()){
             b.setDx(-b.getDx());
         }
         b.setX(b.getX() + b.getDx());
-        b.setY((5/Double.valueOf(width))*(Math.pow(b.getX() - width/2, 2)));
+        b.setY((5.0/Double.valueOf(width))*(Math.pow(b.getX() - width/2, 2)));
    }
    public void sineMotion(Ball b){
+        // sinusoidal model using mathematic equations
         int height = BallFrame.frame.getHeight();
         b.setX(b.getX() + b.getDx()/3);
         b.setY(height/4 * Math.sin(b.getX()*(4*Math.PI/height)) + (height/2));
    }
    public void ellipsoidMotion(Ball b){
+        // use circular motion and change one radius to be less to form ellipse
         b.setX(Double.valueOf(BallFrame.frame.getWidth()/2) + 240*Math.cos(b.getTime()*rotateSpeed));
         b.setY(Double.valueOf(BallFrame.frame.getHeight()/2) - 50 + 120*Math.sin(b.getTime()*rotateSpeed));
    }
