@@ -12,7 +12,7 @@ import javax.swing.ButtonGroup;
 
 public class BallFrame extends JFrame implements ActionListener, ItemListener
 {
-   // execute application
+   // instance variables
    public static JFrame frame;
    private static BallPanel bp;
    private static JMenuBar menuBar;
@@ -139,6 +139,7 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         BallFrame run = new BallFrame();
    }
    public void actionPerformed(ActionEvent e) {
+        // check which button was pressed
         if (e.getSource() == stop){
             bp.setStopped();
         }
@@ -150,6 +151,7 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         }
    }
    public void itemStateChanged(ItemEvent e){
+        // check which menu button was selected
         if (e.getSource() == low){
             bp.setSpeed(3.0, 0, 2048);
         }
