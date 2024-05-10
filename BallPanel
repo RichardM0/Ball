@@ -14,7 +14,9 @@ public class BallPanel extends JPanel implements ActionListener
    
    private int radius = 15; // ball radius
    private double rotateSpeed = Math.PI / 2048;
+
    private boolean isStopped = false;
+   public static String speed = "low";
    private Color color = Color.red;
    private String movement = "linear";
 
@@ -36,10 +38,11 @@ public class BallPanel extends JPanel implements ActionListener
        // check for boundaries and reverse delta x/delta y
        for(Ball b : balls){
            g.setColor(b.getColor());
-           if(b.getX()>BallFrame.frame.getWidth() - radius || b.getX()<0 + radius){
+           if(b.getX()>this.getWidth() - radius || b.getX()<0 + radius){
+               b.setX(b.getX()>this.getWidth() - radius ? this.getWidth() - radius : 0+radius);
                b.setDx(-b.getDx());
            }
-           if(b.getY()>BallFrame.frame.getHeight() - radius || b.getY()<0 + radius){
+           if(b.getY()>this.getHeight() - radius || b.getY()<0 + radius){
                b.setDy(-b.getDy());
            }
            // adjust ball position
@@ -50,8 +53,9 @@ public class BallPanel extends JPanel implements ActionListener
            g.fillOval((int)(b.getX() - radius), (int)(b.getY() - radius), radius*2, radius*2);
        }
    }
-   public void setSpeed(double x, double y, int z){
+   public void setSpeed(double x, double y, int z, String s){
        // check for the sign of delta x + delta y, adjust speed accordingly
+       speed = s;
        for(Ball b : balls){
            if(b.getDx()<0){
                b.setDx(-x);
@@ -80,8 +84,8 @@ public class BallPanel extends JPanel implements ActionListener
    public void addBall(){
         // add ball to random position on screen
         Random r = new Random();
-        int width = BallFrame.frame.getWidth();
-        int height = BallFrame.frame.getHeight();
+        int width = this.getWidth();
+        int height = this.getHeight();
         int x = 30 + r.nextInt(30 + 3*width/4);
         int y = 30 + r.nextInt(30 + 3*height/4);
         Ball b = new Ball(x, y, 15, System.currentTimeMillis());
@@ -120,27 +124,31 @@ public class BallPanel extends JPanel implements ActionListener
    }
    public void circularMotion(Ball b){
         // (shift, radius) is the format (unit circle)
-        b.setX(Double.valueOf(BallFrame.frame.getWidth()/2) + 240*Math.cos(b.getTime()*rotateSpeed));
-        b.setY(Double.valueOf(BallFrame.frame.getHeight()/2) - 50 + 240*Math.sin(b.getTime()*rotateSpeed));
+        int r = Math.min(this.getWidth(), this.getHeight() - radius);
+        b.setX(Double.valueOf(this.getWidth()/2) + (r/2)*Math.cos(b.getTime()*rotateSpeed));
+        b.setY(Double.valueOf(this.getHeight()/2) + (r/2)*Math.sin(b.getTime()*rotateSpeed));
     }
    public void parabolicMotion(Ball b){
         // apply horizontal stretch to 
-        int width = BallFrame.frame.getWidth();
-        if(b.getY() > BallFrame.frame.getHeight()){
+        double width = this.getWidth();
+        double height = this.getHeight() + 2*radius;
+        if(b.getY() > height){
             b.setDx(-b.getDx());
         }
         b.setX(b.getX() + b.getDx());
-        b.setY((5.0/Double.valueOf(width))*(Math.pow(b.getX() - width/2, 2)));
+        b.setY(4*height/(width*width)*(Math.pow(b.getX() - width/2, 2)));
    }
    public void sineMotion(Ball b){
         // sinusoidal model using mathematic equations
-        int height = BallFrame.frame.getHeight();
+        int width = this.getWidth();
+        int height = this.getHeight() - radius;
         b.setX(b.getX() + b.getDx()/3);
-        b.setY(height/4 * Math.sin(b.getX()*(4*Math.PI/height)) + (height/2));
+        b.setY(height/2 * Math.sin(b.getX()*(2*Math.PI/width)) + (height/2));
    }
    public void ellipsoidMotion(Ball b){
         // use circular motion and change one radius to be less to form ellipse
-        b.setX(Double.valueOf(BallFrame.frame.getWidth()/2) + 240*Math.cos(b.getTime()*rotateSpeed));
-        b.setY(Double.valueOf(BallFrame.frame.getHeight()/2) - 50 + 120*Math.sin(b.getTime()*rotateSpeed));
+        int r = Math.min(this.getWidth(), this.getHeight() - radius);
+        b.setX(Double.valueOf(this.getWidth()/2) + r/2*Math.cos(b.getTime()*rotateSpeed));
+        b.setY(Double.valueOf(this.getHeight()/2) + (r/4)*Math.sin(b.getTime()*rotateSpeed));
    }
 }
