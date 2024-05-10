@@ -153,13 +153,13 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
    public void itemStateChanged(ItemEvent e){
         // check which menu button was selected
         if (e.getSource() == low){
-            bp.setSpeed(3.0, 0, 2048);
+            bp.setSpeed(3.0, 0, 2048,  "low");
         }
         else if (e.getSource() == medium){
-            bp.setSpeed(6.0, 0, 1024);
+            bp.setSpeed(6.0, 0, 1024, "medium");
         }
         else if (e.getSource() == high){
-            bp.setSpeed(9.0, 0, 512);
+            bp.setSpeed(9.0, 0, 512, "high");
         }
         else if (e.getSource() == blue){
             bp.setColor(Color.blue);
