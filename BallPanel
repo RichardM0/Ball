@@ -50,6 +50,7 @@ public class BallPanel extends JPanel implements ActionListener
                 move(b);
            }
            // paint to screen
+           System.out.println(b.getDx());
            g.fillOval((int)(b.getX() - radius), (int)(b.getY() - radius), radius*2, radius*2);
        }
    }
@@ -89,6 +90,15 @@ public class BallPanel extends JPanel implements ActionListener
         int x = 30 + r.nextInt(30 + 3*width/4);
         int y = 30 + r.nextInt(30 + 3*height/4);
         Ball b = new Ball(x, y, 15, System.currentTimeMillis());
+        if(speed.equals("low")){
+            b.setDx(3.0);
+        }
+        else if(speed.equals("medium")){
+            b.setDx(6.0);
+        }
+        else if(speed.equals("high")){
+            b.setDx(9.0);
+        }
         b.setColor(color);
         balls.add(b);
    }
