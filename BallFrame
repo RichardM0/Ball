@@ -21,13 +21,14 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
    private static JPanel subPanel; 
    private static JButton start, stop, addBalls;
    private static ButtonGroup speedGroup, colorGroup, pathGroup;
+   /*
+   Organize Java Swing items to Frame
+   */
    public BallFrame()
    {
-        // create frame for balls
         frame = new JFrame( "Bouncing Ball" );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         
-        // create a new ball panel at (x,y) coordinate (25,50)
         bp = new BallPanel(25, 50); 
         
         // create the menu bar
@@ -35,7 +36,7 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         // add a dropdown for the menus
         speedMenu = new JMenu("Speed");  
         colorMenu = new JMenu("Color");
-        pathMenu = new JMenu("Path");
+        pathMenu = new JMenu("Motion");
         // create a group for the menu buttons
         speedGroup = new ButtonGroup();
         colorGroup = new ButtonGroup();
@@ -51,16 +52,16 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         high = new JRadioButtonMenuItem("High Speed");
 
         // create the selections under color menu
-        blue = new JRadioButtonMenuItem("blue");
-        red = new JRadioButtonMenuItem("red");
-        yellow = new JRadioButtonMenuItem("yellow");
+        blue = new JRadioButtonMenuItem("Blue");
+        red = new JRadioButtonMenuItem("Red");
+        yellow = new JRadioButtonMenuItem("Yellow");
 
         // create the selections under color menu
-        linear = new JRadioButtonMenuItem("linear");
-        circular = new JRadioButtonMenuItem("circular");
-        parabolic = new JRadioButtonMenuItem("parabolic");
-        sine = new JRadioButtonMenuItem("sinusoidal");
-        ellipse = new JRadioButtonMenuItem("ellipsoidal");
+        linear = new JRadioButtonMenuItem("Linear");
+        circular = new JRadioButtonMenuItem("Circular");
+        parabolic = new JRadioButtonMenuItem("Parabolic");
+        sine = new JRadioButtonMenuItem("Sinusoidal");
+        ellipse = new JRadioButtonMenuItem("Ellipsoidal");
         
         // add listeners to check if it is selected
         low.addItemListener(this);
@@ -131,15 +132,16 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         frame.getContentPane().add(subPanel, BorderLayout.SOUTH);
         // add ball panel and set frame boundaries
         frame.add( bp );
-        frame.setSize( 600, 600 ); // set frame size
-        frame.setVisible( true ); // display frame
+        frame.setSize( 600, 600 ); 
+        frame.setVisible( true );
    }
+   // run ball frame constructor
    public static void main( String args[] )
    {
         BallFrame run = new BallFrame();
    }
+   // check which button was pressed
    public void actionPerformed(ActionEvent e) {
-        // check which button was pressed
         if (e.getSource() == stop){
             bp.setStopped();
         }
@@ -150,8 +152,8 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
             bp.addBall();
         }
    }
+   // check which menu button was selected
    public void itemStateChanged(ItemEvent e){
-        // check which menu button was selected
         if (e.getSource() == low){
             bp.setSpeed(3.0, 0, 2048,  "low");
         }
