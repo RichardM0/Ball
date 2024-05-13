@@ -12,7 +12,10 @@ import javax.swing.ButtonGroup;
 
 public class BallFrame extends JFrame implements ActionListener, ItemListener
 {
-   // instance variables
+   /*
+    * Instance variables for class BallFrame
+    * Each individual Java Swing element
+    */
    public static JFrame frame;
    private static BallPanel bp;
    private static JMenuBar menuBar;
@@ -22,48 +25,47 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
    private static JButton start, stop, addBalls;
    private static ButtonGroup speedGroup, colorGroup, pathGroup;
    /*
-   Organize Java Swing items to Frame
+   * constructor for objects of BallFrame
+   * Creates entire window
+   * Create menu with speed, color, and motion options
+   * Add the BallPanel with the actual moving balls
+   * Have a subpanel with buttons Start Stop and Add Balls to change balls
+   * Add frame to the window
    */
    public BallFrame()
    {
         frame = new JFrame( "Bouncing Ball" );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         
-        bp = new BallPanel(25, 50); 
-        
-        // create the menu bar
+        bp = new BallPanel(); 
         menuBar = new JMenuBar();
-        // add a dropdown for the menus
+
         speedMenu = new JMenu("Speed");  
         colorMenu = new JMenu("Color");
         pathMenu = new JMenu("Motion");
-        // create a group for the menu buttons
+
         speedGroup = new ButtonGroup();
         colorGroup = new ButtonGroup();
         pathGroup = new ButtonGroup();
-        // separate the menu selections
+
         speedMenu.addSeparator();
         colorMenu.addSeparator();
         pathMenu.addSeparator();
         
-        // create the selections under speed menu
         low = new JRadioButtonMenuItem("Low Speed");
         medium = new JRadioButtonMenuItem("Medium Speed");
         high = new JRadioButtonMenuItem("High Speed");
 
-        // create the selections under color menu
         blue = new JRadioButtonMenuItem("Blue");
         red = new JRadioButtonMenuItem("Red");
         yellow = new JRadioButtonMenuItem("Yellow");
 
-        // create the selections under color menu
         linear = new JRadioButtonMenuItem("Linear");
         circular = new JRadioButtonMenuItem("Circular");
         parabolic = new JRadioButtonMenuItem("Parabolic");
         sine = new JRadioButtonMenuItem("Sinusoidal");
-        ellipse = new JRadioButtonMenuItem("Ellipsoidal");
-        
-        // add listeners to check if it is selected
+        ellipse = new JRadioButtonMenuItem("Ellipse");
+  
         low.addItemListener(this);
         medium.addItemListener(this);
         high.addItemListener(this);
@@ -75,8 +77,7 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         parabolic.addItemListener(this);
         sine.addItemListener(this);
         ellipse.addItemListener(this);
-        
-        // add these radio buttons to their respective group
+
         speedGroup.add(low);
         speedGroup.add(medium);
         speedGroup.add(high);
@@ -88,8 +89,7 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         pathGroup.add(parabolic);
         pathGroup.add(sine);
         pathGroup.add(ellipse);
-        
-        // add these radio buttons to the menu
+
         speedMenu.add(low);
         speedMenu.add(medium);
         speedMenu.add(high);
@@ -102,45 +102,48 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
         pathMenu.add(sine);
         pathMenu.add(ellipse);
 
-        // add each menu to the menu bar
         menuBar.add(speedMenu);
         menuBar.add(colorMenu);
         menuBar.add(pathMenu);
-        
-        // create subpanel for buttons
+ 
         subPanel = new JPanel();
         subPanel.setBackground(Color.gray);
-        
-        // start, stop, and add balls button
+
         start = new JButton("Start");
         stop = new JButton("Stop");
         addBalls = new JButton("Add Balls");
-        
-        // add event listeners to check if the button is pressed
+ 
         stop.addActionListener(this);
         start.addActionListener(this);
         addBalls.addActionListener(this);
-        
-        // add buttons to the subpanel
+
         subPanel.add(start);
         subPanel.add(stop);
         subPanel.add(addBalls);
         
-        // set the menubar visible
         frame.setJMenuBar(menuBar);
-        // add button panel to the bottom of the frame
+
         frame.getContentPane().add(subPanel, BorderLayout.SOUTH);
-        // add ball panel and set frame boundaries
+
         frame.add( bp );
         frame.setSize( 600, 600 ); 
         frame.setVisible( true );
    }
-   // run ball frame constructor
+   /*
+    * main Method
+    * Allows the user to access and view the GUI
+    */
    public static void main( String args[] )
    {
         BallFrame run = new BallFrame();
    }
-   // check which button was pressed
+   /*
+    * actionPerformed method
+    * Listens for which button was pressed:
+    * Stop button stops the ballPanel
+    * Start resumes the ballPanel action
+    * addBalls button adds ball to the ballPanel
+    */
    public void actionPerformed(ActionEvent e) {
         if (e.getSource() == stop){
             bp.setStopped();
@@ -152,7 +155,13 @@ public class BallFrame extends JFrame implements ActionListener, ItemListener
             bp.addBall();
         }
    }
-   // check which menu button was selected
+   /*
+    * itemStateChanged method
+    * Checks which menu item was last changed or chosen
+    * Changes speed to low, medium, or high
+    * Changes color to blue, red, or yellow
+    * Changes motion to linear, circular, parabolic, sinusoidal, or ellipse.
+    */
    public void itemStateChanged(ItemEvent e){
         if (e.getSource() == low){
             bp.setSpeed(3.0, 0, 2048,  "low");
