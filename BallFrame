@@ -13,7 +13,7 @@ import javax.swing.ButtonGroup;
 public class BallFrame extends JFrame implements ActionListener, ItemListener
 {
    /*
-    * Instance variables for class BallFrame
+    * Static variables for class BallFrame
     * Each individual Java Swing element
     */
    public static JFrame frame;
