@@ -18,7 +18,6 @@ public class Ball
      * Constructor for objects of class Ball
      */
     public Ball(int x, int y, int radius, long startTime){
-        // log position, radius, color, and what time in the frame an instance of ball was created
         this.x = x;
         this.y = y;
         dx = 3.0;
@@ -48,24 +47,31 @@ public class Ball
     public double getDx(){
         return dx;
     }
+    // getter method for Dy
     public double getDy(){
         return dy;
     }
+    // getter method for time
     public long getTime(){
         return System.currentTimeMillis() - startTime;
     }
+    // setter method for Dx
     public void setDx(double a){
         dx = a;
     }
+    // setter method for Dy
     public void setDy(double a){
         dy = a;
     }
+    // getter method for Color
     public Color getColor(){
         return color;
     }
+    // setter method for Color
     public void setColor(Color c){
         color = c;
     }
+    // getter method for Radius
     public int getRadius(){
         return radius;
     }
