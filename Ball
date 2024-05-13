@@ -1,78 +1,68 @@
-
-/**
- * Write a description of class Ball here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 import java.awt.Color;
 public class Ball
 {
-    // instance variables
+    /*
+     * Instance variables for class Ball
+     * Variables have basic properties of the ball
+     */
     private double x, y, dx, dy;
     private int radius;
-    private Color color;
+    private Color color = Color.red;
     private long startTime;
 
-    /**
-     * Constructor for objects of class Ball
-     */
+    /*
+    * constructor for objects of class Ball
+    * Starts a timer at when it was created 
+    */
+ 
     public Ball(int x, int y, int radius, long startTime){
         this.x = x;
         this.y = y;
         dx = 3.0;
         dy = 0;
-        color = Color.red;
-        startTime = System.currentTimeMillis();
         this.startTime = startTime;
         this.radius = radius;
     }
-    // setter method for X location
-    public void setX(double a){
-        x = a;
-    }
-    // setter method for Y location
-    public void setY(double a){
-        y = a;
-    }
-    // getter method for X location
+    /*
+     * Getter and Setter methods for class Ball
+     * Get and set basic properties of Ball
+     * Getter for X position, Y position, change in X and Y, color, time, and radius
+     * Setter for X position, Y position, change in X and Y, and color
+     */
     public double getX(){
         return x;
     }
-    // getter method for Y location
     public double getY(){
         return y;
     }
-    // getter method for Dx
     public double getDx(){
         return dx;
     }
-    // getter method for Dy
     public double getDy(){
         return dy;
     }
-    // getter method for time
-    public long getTime(){
-        return System.currentTimeMillis() - startTime;
-    }
-    // setter method for Dx
-    public void setDx(double a){
-        dx = a;
-    }
-    // setter method for Dy
-    public void setDy(double a){
-        dy = a;
-    }
-    // getter method for Color
     public Color getColor(){
         return color;
     }
-    // setter method for Color
-    public void setColor(Color c){
-        color = c;
-    }
-    // getter method for Radius
     public int getRadius(){
         return radius;
+    }
+    public long getTime(){
+        return System.currentTimeMillis() - startTime;
+    }
+    public void setX(double a){
+        x = a;
+    }
+    public void setY(double a){
+        y = a;
+    }
+    public void setDx(double a){
+        dx = a;
+    }
+    public void setDy(double a){
+        dy = a;
+    }
+    public void setColor(Color c){
+        color = c;
     }
 }
