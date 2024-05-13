@@ -8,8 +8,8 @@ import java.util.Random;
 public class BallPanel extends JPanel implements ActionListener
 {
    /*
-    * Instance variables for BallPanel
-    * Includes timer, speed variables, arraylist for balls, 
+    * Instance variables for BallPanel class
+    * Includes timer, speed variables, motion variables, and arraylist for balls, 
     */
    private int delay = 10;
    protected Timer timer;
@@ -17,23 +17,32 @@ public class BallPanel extends JPanel implements ActionListener
    private double rotateSpeed = Math.PI / 2048;
    private boolean isStopped = true;
    public static String speed = "low";
-   private Color color;
    private String movement = "linear";
    
-   // constructor for ball panel
-   public BallPanel(int x, int y)
+   /*
+    * constructor for objects of BallPanel
+    * create an "original" ball
+    * Start a timer to keep refreshing screen
+    */
+   public BallPanel()
    {
       balls.add(new Ball(200, 200, 15,  System.currentTimeMillis()));
       timer = new Timer(delay, this);
       timer.start();
    }
-   // will run when the timer fires
+   /*
+    * actionPerformed method
+    * repaints ball to screen constantly
+    */
    public void actionPerformed(ActionEvent e)
    {
        repaint();
    }
    /*
-    * 
+    * paintComponent method
+    * Paints every ball to the screen
+    * Checks every ball's positions and boundaries to change dX, dY
+    * Move the ball if stop button was not pressed
     */
    public void paintComponent( Graphics g )
    {
@@ -55,7 +64,9 @@ public class BallPanel extends JPanel implements ActionListener
    }
    /*
     * setSpeed method
-    * Scales dX, dY, circular/sinusoidal curving speed z, and keeps track of current speed
+    * Adjusts speed to low, medium, or high
+    * Scales dX, dY, circular/sinusoidal curving speed z
+    * Keeps track of current speed selected using String s
     */
    public void setSpeed(double x, double y, int z, String s){
        speed = s;
@@ -87,7 +98,8 @@ public class BallPanel extends JPanel implements ActionListener
        isStopped = false;
    }
    /*
-    * addBall() method
+    * addBall method
+    * Adds ball to the BallPanel
     * Uses java.util.Random to randomize position and Color
     * Sets speed of ball according to the selected speed
     * add ball to arrayList balls
@@ -116,7 +128,8 @@ public class BallPanel extends JPanel implements ActionListener
    }
    /*
     * setColor method
-    * loop through every ball in balls arrayList to change color to selected color
+    * Changes color of every ball
+    * Go through every ball in balls arrayList to change color
     */
    public void setColor(Color c){
         for(Ball b : balls){
@@ -157,8 +170,10 @@ public class BallPanel extends JPanel implements ActionListener
    }
    /*
     * circularMotion method
+    * Makes ball move in a circle
     * Find the minimum between the width and height to make the radius of the circle
-    * Use equation of a Circle to change X and Y positions: (x-h)^2 + (y-k)^2 = r^2
+    * Use trigonometric functions to model a circle x = cos, y = sin
+    * Translate to center by adding width/2 and height/2 of screen
     */
    public void circularMotion(Ball b){
         int r = Math.min(this.getWidth() - 2*b.getRadius(), this.getHeight() - 2*b.getRadius());
@@ -167,8 +182,9 @@ public class BallPanel extends JPanel implements ActionListener
    }
    /*
     * parabolicMotion method
+    * Makes ball move in a parabolic manner
     * Use the equation of a parabola: y=a(d(x-h))^2 + k
-    * Models a parabola
+    * Models a parabola using mathematical equation
     */
    public void parabolicMotion(Ball b){
         double width = this.getWidth();
@@ -176,13 +192,15 @@ public class BallPanel extends JPanel implements ActionListener
         if(b.getY() > height){
             b.setDx(-b.getDx());
         }
-        b.setX(b.getX() + b.getDx());
-        b.setY(4*height/(width*width)*(Math.pow(b.getX() - width/2, 2)));
+        b.setX(b.getX() + b.getDx()/2);
+        b.setY(4*height/(width*width)*(Math.pow(b.getX() - width/2, 2)) + b.getRadius());
    }
    /*
-    * Sinusoidal method
+    * sineMotion method
+    * Makes ball move in a sinusoidal manner
     * Finds width + height of the window, accounting for ball radius
-    * Uses sinusoidal equation to move: y = a(sin(d(x-h))) + c
+    * Uses sinusoidal equation to move: y = a(sin(k(x-h))) + c
+    * Use 2*π/k = Period to make one period for the whole width
     */
    public void sineMotion(Ball b){
         int width = this.getWidth();
@@ -192,8 +210,9 @@ public class BallPanel extends JPanel implements ActionListener
    }
    /*
     * ellipsoidMotion method
+    * Makes ball move in an ellipse pattern
     * implements circularMotion, just stretching the Y by less
-    * Ellipses has two radiuses, using circularMotion method and changing Y radius allows ellipsoid motion
+    * Ellipses has two radiuses, stretch one radius larger to create ellipse
     */
    public void ellipsoidMotion(Ball b){
         int r = Math.min(this.getWidth(), this.getHeight() - b.getRadius());
